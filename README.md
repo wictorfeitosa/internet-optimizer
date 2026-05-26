@@ -88,6 +88,14 @@ If you have modified the source code and need to **generate or update the execut
 
 ---
 
+## 🛠️ Tech Stack & Authorship
+
+* **Core Engine:** Built entirely in **Python 3**.
+* **Interface:** Powered by a lightweight, interactive **Command Line Interface (CLI)** / Prompt.
+* **Development & Testing:** Concept, supervision, and end-to-end environment testing strictly conducted by **Wictor Feitosa**.
+
+---
+
 ## 📜 License
 
 This project is distributed under the **MIT License**. This means you are completely free to use, modify, study, and distribute the code, provided that the original developer credits are maintained.
