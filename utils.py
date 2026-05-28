@@ -45,7 +45,7 @@ def desativar_network_throttling():
             winreg.SetValueEx(
                 key, "NetworkThrottlingIndex", 0, winreg.REG_DWORD, 0xFFFFFFFF
             )
-            winreg.SetValueEx(key, "SystemResponsiveness", 0, winreg.REG_DWORD, 0)
+            winreg.SetValueEx(key, "SystemResponsiveness", 0, winreg.REG_DWORD, 15)
         print(f"{VERDE}[OK] Network Throttling desativado.{RESET}")
     except Exception as e:
         print(f"{VERMELHO}[ERRO] Falha ao configurar Throttling: {e}{RESET}")
