@@ -62,7 +62,7 @@ def aplicar_ajustes_tcp():
     # Aplica comandos netsh para otimização de rede.
     comandos = [
         "netsh int tcp set global autotuninglevel=normal",
-        "netsh int tcp set global ecncapability=disabled",
+        "netsh int tcp set global ecncapability=enabled",
         "netsh int tcp set global rss=enabled",
         "netsh int tcp set global fastopen=enabled",
     ]
