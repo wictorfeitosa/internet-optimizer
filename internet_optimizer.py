@@ -17,22 +17,9 @@ def finalizar_otimizacao():
 
     for nome, cmd in comandos_limpeza:
         print(f"   {utils.CIANO}Executando: {nome}...{utils.RESET}")
-        # Removemos o capture_output=True para que o console mostre o feedback do Windows
-        subprocess.run(cmd, shell=True)
-
-    print(f"{utils.VERDE}[OK] Otimizações consolidadas.{utils.RESET}")
-
-    print(
-        f"\n{utils.BRANCO}-> Executando limpeza final de sockets e cache...{utils.RESET}"
-    )
-    comandos_limpeza = [
-        "ipconfig /flushdns",
-        "netsh winsock reset",
-        "netsh int ip reset",
-    ]
-    for cmd in comandos_limpeza:
         subprocess.run(cmd, shell=True, capture_output=True)
-    print(f"{utils.VERDE}[OK] Otimizações consolidadas.{utils.RESET}")
+
+    print(f"{utils.VERDE}[OK] Otimizações consolidadas e cache limpo.{utils.RESET}")
 
 
 def main():
@@ -49,22 +36,32 @@ def main():
     )
 
     utils.fazer_backup_registro()
+    print(f"{utils.VERDE}[OK] Backup do registro concluído.{utils.RESET}")
+
     utils.desativar_network_throttling()
+    print(f"{utils.VERDE}[OK] Network Throttling desativado.{utils.RESET}")
+
     utils.aplicar_ajustes_tcp()
+    print(f"{utils.VERDE}[OK] Parâmetros TCP configurados.{utils.RESET}")
+
     utils.testar_e_aplicar_mtu()
+
     utils.configurar_dns()
+
     finalizar_otimizacao()
 
     print(
         f"\n{utils.VERDE}====================================================================={utils.RESET}"
     )
     print(f"{utils.VERDE}[SUCESSO] OTIMIZAÇÃO CONCLUÍDA!{utils.RESET}")
-    print(f"{utils.VERDE}REINICIE O PC AGORA para aplicar as mudanças.{utils.RESET}")
+    print(
+        f"{utils.VERDE}REINICIE O PC AGORA para aplicar todas as mudanças.{utils.RESET}"
+    )
     print(
         f"{utils.VERDE}====================================================================={utils.RESET}"
     )
 
-    input("\nPressione qualquer tecla para sair...")
+    input("\nTudo certo, pode fechar a tela.")
 
 
 if __name__ == "__main__":

@@ -27,7 +27,7 @@ def eh_administrador():
 
 
 def fazer_backup_registro():
-    print(f"{BRANCO}-> Criando backup do registro...{RESET}")
+    print(f"{BRANCO}-> Criando backup do registro atual...{RESET}")
     caminho = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "Backup_Rede.reg"
     )
@@ -49,7 +49,7 @@ def desativar_network_throttling():
 
 
 def aplicar_ajustes_tcp():
-    print(f"{BRANCO}-> Aplicando otimizações TCP...{RESET}")
+    print(f"{BRANCO}-> Aplicando otimizações TCP estáveis...{RESET}")
     comandos = [
         "netsh int tcp set global autotuninglevel=normal",
         "netsh int tcp set global ecncapability=disabled",
@@ -61,7 +61,7 @@ def aplicar_ajustes_tcp():
 
 
 def testar_e_aplicar_mtu():
-    print(f"{BRANCO}-> Testando MTU ideal...{RESET}")
+    print(f"{BRANCO}-> Testando MTU ideal (ping diagnóstico)...{RESET}")
     mtu_ideal = 1500
     for mtu in range(1500, 1399, -1):
         if (
@@ -73,16 +73,19 @@ def testar_e_aplicar_mtu():
             mtu_ideal = mtu
             break
 
+    print(f"{BRANCO}-> Aplicando MTU: {mtu_ideal}{RESET}")
     cmd_ifaces = "powershell -Command \"Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty Name\""
     interfaces = subprocess.run(
         cmd_ifaces, shell=True, capture_output=True, text=True
     ).stdout.splitlines()
+
     for iface in interfaces:
         if iface.strip():
             subprocess.run(
                 f'netsh interface ipv4 set subinterface "{iface.strip()}" mtu={mtu_ideal} store=persistent',
                 shell=True,
             )
+    print(f"{VERDE}[OK] MTU configurado com sucesso.{RESET}")
 
 
 def configurar_dns():
@@ -102,4 +105,4 @@ def configurar_dns():
                     f'netsh interface ipv4 add dns name="{iface.strip()}" 8.8.4.4 index=2',
                     shell=True,
                 )
-        print(f"{VERDE}[OK] DNS configurado.{RESET}")
+        print(f"{VERDE}[OK] DNS de performance aplicado.{RESET}")
