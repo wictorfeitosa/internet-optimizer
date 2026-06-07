@@ -29,7 +29,7 @@ def main():
         f"{utils.CIANO}====================================================================={utils.RESET}"
     )
     print(
-        f"{utils.CIANO}          INTERNET OPTIMIZER v1.2.1 (STABLE MODE)                    {utils.RESET}"
+        f"{utils.CIANO}          INTERNET OPTIMIZER v1.2.2 (STABLE MODE)                    {utils.RESET}"
     )
     print(
         f"{utils.CIANO}====================================================================={utils.RESET}"
