@@ -18,7 +18,7 @@ This behavior is a common false positive in system optimization tools. The code 
 
 ---
 
-## ⚙️ Features (v1.2.1)
+## ⚙️ Features (v1.2.2)
 
 * 🗃️ Portable Safety Backup: Automatically creates a .reg backup file before any modifications are applied.
 * ⚡ Network Throttling Control: Disables Windows' network packet throttling for maximum system responsiveness.
