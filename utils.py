@@ -54,7 +54,7 @@ def aplicar_ajustes_tcp():
         "netsh int tcp set global autotuninglevel=normal",
         "netsh int tcp set global ecncapability=disabled",
         "netsh int tcp set global rss=enabled",
-        "netsh int tcp set global fastopen=disabled",
+        "netsh int tcp set global fastopen=enabled",
     ]
     for cmd in comandos:
         subprocess.run(cmd, shell=True, capture_output=True)

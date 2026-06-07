@@ -58,7 +58,7 @@ If you have modified the source code and need to generate a new executable:
    pip install pyinstaller
 
 2. Generate the binary (bundled into a single file):
-   pyinstaller --onefile --name="internet_optimizer" internet_optimizer.py
+   pyinstaller --onefile --icon=moose.ico internet_optimizer.py
 
 The generated file will be available in the dist/ folder.
 
