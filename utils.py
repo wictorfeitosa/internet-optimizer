@@ -27,7 +27,7 @@ def eh_administrador():
 
 
 def fazer_backup_registro():
-    print(f"{BRANCO}-> Criando backup do registro atual...{RESET}")
+    print(f"{BRANCO}-> Criando backup do registro...{RESET}")
     caminho = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "Backup_Rede.reg"
     )
@@ -35,7 +35,6 @@ def fazer_backup_registro():
         f'reg export "HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters" "{caminho}" /y',
         shell=True,
     )
-    print(f"{VERDE}[OK] Backup criado.{RESET}")
 
 
 def desativar_network_throttling():
@@ -47,48 +46,60 @@ def desativar_network_throttling():
             key, "NetworkThrottlingIndex", 0, winreg.REG_DWORD, 0xFFFFFFFF
         )
         winreg.SetValueEx(key, "SystemResponsiveness", 0, winreg.REG_DWORD, 15)
-    print(f"{VERDE}[OK] Network Throttling desativado.{RESET}")
 
 
 def aplicar_ajustes_tcp():
-    print(f"{BRANCO}-> Aplicando otimizações TCP estáveis...{RESET}")
+    print(f"{BRANCO}-> Aplicando otimizações TCP...{RESET}")
     comandos = [
         "netsh int tcp set global autotuninglevel=normal",
-        "netsh int tcp set global ecncapability=disabled",  # Desativado para compatibilidade
+        "netsh int tcp set global ecncapability=disabled",
         "netsh int tcp set global rss=enabled",
-        "netsh int tcp set global fastopen=disabled",  # Desativado para evitar IP mismatch
+        "netsh int tcp set global fastopen=disabled",
     ]
     for cmd in comandos:
         subprocess.run(cmd, shell=True, capture_output=True)
-    print(f"{VERDE}[OK] Parâmetros TCP configurados.{RESET}")
 
 
 def testar_e_aplicar_mtu():
-    print(f"{BRANCO}-> Testando MTU ideal (ping diagnóstico)...{RESET}")
-
-    def testar_mtu(tamanho):
-        return (
-            subprocess.run(
-                f"ping -n 1 -f -l {tamanho-28} 8.8.8.8", shell=True, capture_output=True
-            ).returncode
-            == 0
-        )
-
+    print(f"{BRANCO}-> Testando MTU ideal...{RESET}")
     mtu_ideal = 1500
     for mtu in range(1500, 1399, -1):
-        if testar_mtu(mtu):
+        if (
+            subprocess.run(
+                f"ping -n 1 -f -l {mtu-28} 8.8.8.8", shell=True, capture_output=True
+            ).returncode
+            == 0
+        ):
             mtu_ideal = mtu
             break
 
-    print(f"{VERDE}[OK] MTU encontrado: {mtu_ideal}. Aplicando...{RESET}")
     cmd_ifaces = "powershell -Command \"Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty Name\""
     interfaces = subprocess.run(
         cmd_ifaces, shell=True, capture_output=True, text=True
     ).stdout.splitlines()
-
     for iface in interfaces:
         if iface.strip():
             subprocess.run(
                 f'netsh interface ipv4 set subinterface "{iface.strip()}" mtu={mtu_ideal} store=persistent',
                 shell=True,
             )
+
+
+def configurar_dns():
+    print(f"\n{BRANCO}Deseja configurar DNS de performance (Google)? (s/n){RESET}")
+    if input("> ").lower() == "s":
+        cmd_ifaces = "powershell -Command \"Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty Name\""
+        interfaces = subprocess.run(
+            cmd_ifaces, shell=True, capture_output=True, text=True
+        ).stdout.splitlines()
+        for iface in interfaces:
+            if iface.strip():
+                subprocess.run(
+                    f'netsh interface ipv4 set dns name="{iface.strip()}" static 8.8.8.8 primary',
+                    shell=True,
+                )
+                subprocess.run(
+                    f'netsh interface ipv4 add dns name="{iface.strip()}" 8.8.4.4 index=2',
+                    shell=True,
+                )
+        print(f"{VERDE}[OK] DNS configurado.{RESET}")
