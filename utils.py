@@ -102,7 +102,7 @@ def configurar_dns():
                     shell=True,
                 )
                 subprocess.run(
-                    f'netsh interface ipv4 add dns name="{iface.strip()}" 8.8.4.4 index=2',
+                    f'netsh interface ipv4 add dns name="{iface.strip()}" 1.1.1.1 index=2',
                     shell=True,
                 )
         print(f"{VERDE}[OK] DNS de performance aplicado.{RESET}")
