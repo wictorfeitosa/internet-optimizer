@@ -1,6 +1,21 @@
 import sys
 import ctypes
+import subprocess
 import utils
+
+
+def finalizar_otimizacao():
+    print(
+        f"\n{utils.BRANCO}-> Executando limpeza final de sockets e cache...{utils.RESET}"
+    )
+    comandos_limpeza = [
+        "ipconfig /flushdns",
+        "netsh winsock reset",
+        "netsh int ip reset",
+    ]
+    for cmd in comandos_limpeza:
+        subprocess.run(cmd, shell=True, capture_output=True)
+    print(f"{utils.VERDE}[OK] Otimizações consolidadas e cache limpo.{utils.RESET}")
 
 
 def main():
@@ -10,36 +25,26 @@ def main():
         f"{utils.CIANO}====================================================================={utils.RESET}"
     )
     print(
-        f"{utils.CIANO}          ASSISTENTE DE OTIMIZAÇÃO DE REDE (STABLE MODE)             {utils.RESET}"
+        f"{utils.CIANO}          INTERNET OPTIMIZER v1.2.0 (STABLE MODE)                    {utils.RESET}"
     )
     print(
         f"{utils.CIANO}====================================================================={utils.RESET}"
     )
-    print(
-        f"{utils.BRANCO}Otimizando registro e parâmetros TCP para máxima estabilidade e latência.{utils.RESET}"
-    )
 
     utils.fazer_backup_registro()
     utils.desativar_network_throttling()
-    utils.limpar_e_configurar_regedit()
-
-    # Ajustes aplicados de forma consistente para evitar erros em jogos
     utils.aplicar_ajustes_tcp()
     utils.testar_e_aplicar_mtu()
 
-    print(
-        f"\n{utils.CIANO}Deseja otimizar sua resolução de DNS (Google 8.8.8.8 + Cloudflare 1.1.1.1)?{utils.RESET}"
-    )
-    print("Pressione [S] para aplicar ou [N] para ignorar.")
-
-    if input("> ").upper() == "S":
-        utils.configurar_dns()
+    finalizar_otimizacao()
 
     print(
         f"\n{utils.VERDE}====================================================================={utils.RESET}"
     )
     print(f"{utils.VERDE}[SUCESSO] OTIMIZAÇÃO CONCLUÍDA!{utils.RESET}")
-    print(f"{utils.VERDE}REINICIE O PC PARA APLICAR AS MUDANÇAS.{utils.RESET}")
+    print(
+        f"{utils.VERDE}REINICIE O PC AGORA para aplicar todas as mudanças.{utils.RESET}"
+    )
     print(
         f"{utils.VERDE}====================================================================={utils.RESET}"
     )
