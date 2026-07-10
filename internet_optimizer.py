@@ -29,7 +29,7 @@ def main():
         f"{utils.CIANO}====================================================================={utils.RESET}"
     )
     print(
-        f"{utils.CIANO}          INTERNET OPTIMIZER v1.2.2 (STABLE MODE)                    {utils.RESET}"
+        f"{utils.CIANO}          INTERNET OPTIMIZER (STABLE MODE)                    {utils.RESET}"
     )
     print(
         f"{utils.CIANO}====================================================================={utils.RESET}"
@@ -38,16 +38,10 @@ def main():
     utils.fazer_backup_registro()
     print(f"{utils.VERDE}[OK] Backup do registro concluído.{utils.RESET}")
 
-    utils.desativar_network_throttling()
-    print(f"{utils.VERDE}[OK] Network Throttling desativado.{utils.RESET}")
-
+    # Aplicar apenas os ajustes TCP definidos no utils.py
     utils.aplicar_ajustes_tcp()
-    print(f"{utils.VERDE}[OK] Parâmetros TCP configurados.{utils.RESET}")
 
-    utils.testar_e_aplicar_mtu()
-
-    utils.configurar_dns()
-
+    # Limpeza final dos protocolos de rede
     finalizar_otimizacao()
 
     print(
