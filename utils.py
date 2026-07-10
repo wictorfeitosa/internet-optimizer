@@ -3,6 +3,7 @@ import winreg
 import subprocess
 import os
 
+# Definição de Cores
 BRANCO, VERDE, VERMELHO, CIANO, RESET = (
     "\033[97m",
     "\033[92m",
@@ -37,7 +38,38 @@ def fazer_backup_registro():
     )
 
 
+def aplicar_ajustes_tcp():
+    print(f"{BRANCO}-> Aplicando otimizações TCP...{RESET}")
+
+    # Lista de ajustes: (nome, comando, valor_alvo)
+    ajustes = [
+        (
+            "AUTOTUNINGLEVEL",
+            "netsh int tcp set global autotuninglevel=normal",
+            "normal",
+        ),
+        (
+            "ECNCAPABILITY",
+            "netsh int tcp set global ecncapability=disabled",
+            "disabled",
+        ),
+        ("RSS", "netsh int tcp set global rss=enabled", "enabled"),
+        ("FASTOPEN", "netsh int tcp set global fastopen=disabled", "disabled"),
+    ]
+
+    for nome, cmd, valor in ajustes:
+        # Executa o comando
+        resultado = subprocess.run(cmd, shell=True, capture_output=True)
+
+        # Verifica se o comando retornou sucesso (returncode 0)
+        if resultado.returncode == 0:
+            print(f"   {CIANO}[OK] {nome} definido para: {VERDE}{valor}{RESET}")
+        else:
+            print(f"   {CIANO}[ERRO] {nome} não pôde ser alterado.{RESET}")
+
+
 def desativar_network_throttling():
+    print(f"{BRANCO}-> Desativando Network Throttling...{RESET}")
     path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile"
     with winreg.OpenKey(
         winreg.HKEY_LOCAL_MACHINE, path, 0, winreg.KEY_SET_VALUE
@@ -46,18 +78,7 @@ def desativar_network_throttling():
             key, "NetworkThrottlingIndex", 0, winreg.REG_DWORD, 0xFFFFFFFF
         )
         winreg.SetValueEx(key, "SystemResponsiveness", 0, winreg.REG_DWORD, 15)
-
-
-def aplicar_ajustes_tcp():
-    print(f"{BRANCO}-> Aplicando otimizações TCP estáveis...{RESET}")
-    comandos = [
-        "netsh int tcp set global autotuninglevel=normal",
-        "netsh int tcp set global ecncapability=disabled",
-        "netsh int tcp set global rss=enabled",
-        "netsh int tcp set global fastopen=enabled",
-    ]
-    for cmd in comandos:
-        subprocess.run(cmd, shell=True, capture_output=True)
+    print(f"{VERDE}[OK] Network Throttling desativado.{RESET}")
 
 
 def testar_e_aplicar_mtu():
@@ -72,8 +93,8 @@ def testar_e_aplicar_mtu():
         ):
             mtu_ideal = mtu
             break
-
     print(f"{BRANCO}-> Aplicando MTU: {mtu_ideal}{RESET}")
+
     cmd_ifaces = "powershell -Command \"Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty Name\""
     interfaces = subprocess.run(
         cmd_ifaces, shell=True, capture_output=True, text=True
@@ -89,7 +110,9 @@ def testar_e_aplicar_mtu():
 
 
 def configurar_dns():
-    print(f"\n{BRANCO}Deseja configurar DNS de performance (Google)? (s/n){RESET}")
+    print(
+        f"\n{BRANCO}Deseja configurar DNS de performance (Google/Cloudflare)? (s/n){RESET}"
+    )
     if input("> ").lower() == "s":
         cmd_ifaces = "powershell -Command \"Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty Name\""
         interfaces = subprocess.run(
