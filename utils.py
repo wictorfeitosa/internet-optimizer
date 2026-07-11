@@ -107,25 +107,3 @@ def testar_e_aplicar_mtu():
                 shell=True,
             )
     print(f"{VERDE}[OK] MTU configurado com sucesso.{RESET}")
-
-
-def configurar_dns():
-    print(
-        f"\n{BRANCO}Deseja configurar DNS de performance (Google/Cloudflare)? (s/n){RESET}"
-    )
-    if input("> ").lower() == "s":
-        cmd_ifaces = "powershell -Command \"Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty Name\""
-        interfaces = subprocess.run(
-            cmd_ifaces, shell=True, capture_output=True, text=True
-        ).stdout.splitlines()
-        for iface in interfaces:
-            if iface.strip():
-                subprocess.run(
-                    f'netsh interface ipv4 set dns name="{iface.strip()}" static 8.8.8.8 primary',
-                    shell=True,
-                )
-                subprocess.run(
-                    f'netsh interface ipv4 add dns name="{iface.strip()}" 1.1.1.1 index=2',
-                    shell=True,
-                )
-        print(f"{VERDE}[OK] DNS de performance aplicado.{RESET}")
