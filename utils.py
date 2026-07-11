@@ -50,11 +50,11 @@ def aplicar_ajustes_tcp():
         ),
         (
             "ECNCAPABILITY",
-            "netsh int tcp set global ecncapability=disabled",
-            "disabled",
+            "netsh int tcp set global ecncapability=enabled",
+            "enabled",
         ),
         ("RSS", "netsh int tcp set global rss=enabled", "enabled"),
-        ("FASTOPEN", "netsh int tcp set global fastopen=disabled", "disabled"),
+        ("FASTOPEN", "netsh int tcp set global fastopen=enabled", "enabled"),
     ]
 
     for nome, cmd, valor in ajustes:
@@ -79,31 +79,3 @@ def desativar_network_throttling():
         )
         winreg.SetValueEx(key, "SystemResponsiveness", 0, winreg.REG_DWORD, 15)
     print(f"{VERDE}[OK] Network Throttling desativado.{RESET}")
-
-
-def testar_e_aplicar_mtu():
-    print(f"{BRANCO}-> Testando MTU ideal (ping diagnóstico)...{RESET}")
-    mtu_ideal = 1500
-    for mtu in range(1500, 1399, -1):
-        if (
-            subprocess.run(
-                f"ping -n 1 -f -l {mtu-28} 8.8.8.8", shell=True, capture_output=True
-            ).returncode
-            == 0
-        ):
-            mtu_ideal = mtu
-            break
-    print(f"{BRANCO}-> Aplicando MTU: {mtu_ideal}{RESET}")
-
-    cmd_ifaces = "powershell -Command \"Get-NetAdapter | Where-Object {$_.Status -eq 'Up'} | Select-Object -ExpandProperty Name\""
-    interfaces = subprocess.run(
-        cmd_ifaces, shell=True, capture_output=True, text=True
-    ).stdout.splitlines()
-
-    for iface in interfaces:
-        if iface.strip():
-            subprocess.run(
-                f'netsh interface ipv4 set subinterface "{iface.strip()}" mtu={mtu_ideal} store=persistent',
-                shell=True,
-            )
-    print(f"{VERDE}[OK] MTU configurado com sucesso.{RESET}")
