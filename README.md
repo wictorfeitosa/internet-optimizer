@@ -1,5 +1,4 @@
-# 🚀 Internet Optimizer (v1.2.1)
-
+# 🚀 Internet Optimizer
 ![Python Version](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)
 ![Platform](https://img.shields.io/badge/Platform-Windows-lightgrey?logo=windows&logoColor=blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
@@ -18,21 +17,20 @@ This behavior is a common false positive in system optimization tools. The code 
 
 ---
 
-## ⚙️ Features (v1.2.2)
+## ⚙️ Features
 
 * 🗃️ Portable Safety Backup: Automatically creates a .reg backup file before any modifications are applied.
 * ⚡ Network Throttling Control: Disables Windows' network packet throttling for maximum system responsiveness.
-* 🎯 Nagle's Algorithm Optimization: Configures TCP parameters for immediate packet delivery.
-* 🌐 TCP Stack Stabilization: Optimizes Receive Side Scaling (RSS) and disables Fast Open and ECN to prevent session drops and IP mismatch errors.
+* 🌐 TCP Stack Stabilization: Configures autotuninglevel, ECN, RSS, and Fast Open for optimal stability and performance.
 * 📏 Dynamic MTU Discovery: Active diagnostic scan to determine the ideal MTU, eliminating packet fragmentation.
 * 🔄 Deep Cleanup: Automatically executes flushdns, winsock reset, and ip reset with real-time visual feedback.
 * 🌐 DNS Optimization: Optional configuration of high-performance DNS servers (Google/Cloudflare).
-
 ---
 
 ## 🛠️ How to Use
 
 ### 🎮 Option A: End User (Executable)
+
 Ideal for those who want quick optimization without installing dependencies.
 
 1. Download the internet_optimizer.exe from the Releases tab.
@@ -41,6 +39,7 @@ Ideal for those who want quick optimization without installing dependencies.
 4. Restart your PC to apply the network changes.
 
 ### 💻 Option B: Developer (Source Code)
+
 Ideal for those who want to audit or customize the code.
 
 1. Ensure you have Python 3.8+ installed.
@@ -63,6 +62,7 @@ If you have modified the source code and need to generate a new executable:
 The generated file will be available in the dist/ folder.
 
 ---
+
 
 ## 📜 License
 This project is distributed under the MIT License. You are free to use, modify, and distribute the code, provided that the original credits are maintained.
